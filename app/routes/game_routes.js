@@ -3,8 +3,8 @@ const express = require('express')
 // Passport docs: http://www.passportjs.org/docs/
 const passport = require('passport')
 
-// pull in Mongoose model for examples
-const Example = require('../models/example')
+// pull in Mongoose model for games
+const Game = require('../models/example')
 
 // this is a collection of methods that help us detect situations when we need
 // to throw a custom error
@@ -28,20 +28,20 @@ const requireToken = passport.authenticate('bearer', { session: false })
 const router = express.Router()
 
 // INDEX
-// GET /examples
-router.get('/examples', requireToken, (req, res, next) => {
-  Example.find()
-    // respond with status 200 and JSON of the examples
-    .then(examples => res.status(200).json({ examples: examples }))
+// GET /games
+router.get('/games', requireToken, (req, res, next) => {
+  Game.find()
+    // respond with status 200 and JSON of the games
+    .then(games => res.status(200).json({ games: games }))
     // if an error occurs, pass it to the handler
     .catch(next)
 })
 
 // SHOW
-// GET /examples/5a7db6c74d55bc51bdf39793
-router.get('/examples/:id', requireToken, (req, res, next) => {
+// GET /games/5a7db6c74d55bc51bdf39793
+router.get('/games/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
-  Example.findById(req.params.id)
+  Game.findById(req.params.id)
     .then(handle404)
     // if `findById` is succesful, respond with 200 and "example" JSON
     .then(example => res.status(200).json({ example: example }))
@@ -50,12 +50,12 @@ router.get('/examples/:id', requireToken, (req, res, next) => {
 })
 
 // CREATE
-// POST /examples
-router.post('/examples', requireToken, (req, res, next) => {
+// POST /games
+router.post('/games', requireToken, (req, res, next) => {
   // set owner of new example to be current user
   req.body.example.owner = req.user.id
 
-  Example.create(req.body.example)
+  Game.create(req.body.example)
     // respond to succesful `create` with status 201 and JSON of new "example"
     .then(example => {
       res.status(201).json({ example })
@@ -67,13 +67,13 @@ router.post('/examples', requireToken, (req, res, next) => {
 })
 
 // UPDATE
-// PATCH /examples/5a7db6c74d55bc51bdf39793
-router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
+// PATCH /games/5a7db6c74d55bc51bdf39793
+router.patch('/games/:id', requireToken, removeBlanks, (req, res, next) => {
   // if the client attempts to change the `owner` property by including a new
   // owner, prevent that by deleting that key/value pair
   delete req.body.example.owner
 
-  Example.findById(req.params.id)
+  Game.findById(req.params.id)
     .then(handle404)
     // ensure the signed in user (req.user.id) is the same as the example's owner (example.owner)
     .then(example => requireOwnership(req, example))
@@ -86,9 +86,9 @@ router.patch('/examples/:id', requireToken, removeBlanks, (req, res, next) => {
 })
 
 // DESTROY
-// DELETE /examples/5a7db6c74d55bc51bdf39793
-router.delete('/examples/:id', requireToken, (req, res, next) => {
-  Example.findById(req.params.id)
+// DELETE /games/5a7db6c74d55bc51bdf39793
+router.delete('/games/:id', requireToken, (req, res, next) => {
+  Game.findById(req.params.id)
     .then(handle404)
   // ensure the signed in user (req.user.id) is the same as the example's owner (example.owner)
     .then(example => requireOwnership(req, example))
