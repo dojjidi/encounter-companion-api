@@ -1,6 +1,10 @@
 const mongoose = require('mongoose')
 
 const statsSchema = new mongoose.Schema({
+  name: {
+    type: String,
+    required: true
+  },
   hp: {
     type: Number,
     required: true
