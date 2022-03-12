@@ -26,4 +26,4 @@ const statsSchema = new mongoose.Schema({
   timestamps: true
 })
 
-module.exports = mongoose.model('Example', statsSchema)
+module.exports = mongoose.model('Stats', statsSchema)

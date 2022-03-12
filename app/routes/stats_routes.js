@@ -43,7 +43,7 @@ router.get('/stats/:id', requireToken, (req, res, next) => {
   // req.params.id will be set based on the `:id` in the route
   Stats.findById(req.params.id)
     .then(handle404)
-    // if `findById` is succesful, respond with 200 and "stats" JSON
+    // if `findById` is successful, respond with 200 and "stats" JSON
     .then(stats => res.status(200).json({ stats: stats }))
     // if an error occurs, pass it to the handler
     .catch(next)
@@ -53,10 +53,9 @@ router.get('/stats/:id', requireToken, (req, res, next) => {
 // POST /stats
 router.post('/stats', requireToken, (req, res, next) => {
   // set owner of new stats to be current user
-  req.body.stats.owner = req.user.id
-
+  req.body.stats.user = req.user.id
   Stats.create(req.body.stats)
-    // respond to succesful `create` with status 201 and JSON of new "stats"
+    // respond to successful `create` with status 201 and JSON of new "stats"
     .then(stats => {
       res.status(201).json({ stats })
     })
